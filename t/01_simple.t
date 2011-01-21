@@ -83,8 +83,13 @@ subtest 'insert or update' => sub {
 
 
     $fuga = $teng->insert_or_update('fuga',
-        { path => '/insert_or_update' },
-        { pageview => \'pageview + 1' },
+        {
+            path     => '/insert_or_update',
+            pageview => 1,
+        },
+        {
+            pageview => \'pageview + 1',
+        },
     );
 
     $fuga = $fuga->refetch;
