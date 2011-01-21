@@ -1,0 +1,24 @@
+# NAME
+
+Teng::Plugin::InsertOrUpdate -
+
+# SYNOPSIS
+
+  use Teng::Plugin::InsertOrUpdate;
+
+# DESCRIPTION
+
+Teng::Plugin::InsertOrUpdate is
+
+# AUTHOR
+
+Ryuta Kamizono <kamipo@gmail.com>
+
+# SEE ALSO
+
+# LICENSE
+
+Copyright (C) Ryuta Kamizono
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
