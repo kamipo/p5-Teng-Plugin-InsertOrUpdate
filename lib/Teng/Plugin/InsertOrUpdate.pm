@@ -24,7 +24,7 @@ sub insert_or_update {
     }
 
     my ($sql2, @binds2) = $self->sql_builder->update( $table, $update_args );
-    $sql2 =~ s/UPDATE\s(?:\S+)\sSET/ ON DUPLICATE KEY UPDATE/;
+    $sql2 =~ s/^UPDATE\s(?:\S+)\sSET/ ON DUPLICATE KEY UPDATE/;
 
     my $sth = $self->_execute($sql1.$sql2, [(@binds1, @binds2)], $table);
 
