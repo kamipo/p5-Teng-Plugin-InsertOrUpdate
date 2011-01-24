@@ -26,28 +26,23 @@ $dbh->do(q{
 my $schema  = Hoge::Schema->connect('DBI:mysql:test:localhost', 'root', '');
 my $fuga_rs = $schema->resultset('Fuga');
 
-subtest 'dbic update_or_new' => sub {
+subtest 'dbic find_or_create' => sub {
     for my $i (1..2) {
         $schema->txn_begin;
 
-        my $fuga = $fuga_rs->update_or_new({
-            path     => '/dbic_update_or_create',
-            pageview => \'LAST_INSERT_ID(pageview + 1)',
+        my $fuga = $fuga_rs->find_or_create({
+            path     => '/dbic_find_or_create',
+            pageview => 0,
         });
 
-        if (!$fuga->in_storage) {
-            $fuga->pageview(\'LAST_INSERT_ID(1)');
-            $fuga->insert;
-        }
+        my $path     = $fuga->path;
+        my $pageview = $fuga->pageview + 1;
 
-        my $dbh = $schema->storage->dbh;
-        my $pageview = $dbh->selectrow_array('SELECT LAST_INSERT_ID()');
+        $fuga->update({ pageview => \'pageview + 1' });
 
         $schema->txn_commit;
 
-        my $body = join ':', ($fuga->path, $pageview);
-
-        is $body, "/dbic_update_or_create:$i";
+        is "$path:$pageview", "/dbic_find_or_create:$i";
     }
 };
 

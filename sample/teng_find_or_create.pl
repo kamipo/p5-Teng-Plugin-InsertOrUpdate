@@ -39,16 +39,18 @@ subtest 'teng find_or_create' => sub {
         $teng->txn_begin;
 
         my $fuga = $teng->find_or_create('fuga', {
-            path => '/teng_find_or_create',
+            path     => '/teng_find_or_create',
+            #pageview => 0,
         });
 
+        my $path     = $fuga->path;
+        my $pageview = $fuga->pageview + 1;
+
         $fuga->update({ pageview => \'pageview + 1' });
-        $fuga = $fuga->refetch;
 
         $teng->txn_commit;
 
-        my $body = join ':', ($fuga->path, $fuga->pageview);
-        is $body, "/teng_find_or_create:$i";
+        is "$path:$pageview", "/teng_find_or_create:$i";
     }
 };
 
