@@ -34,29 +34,22 @@ my $teng = Hoge::DB->new(
     dbh    => $dbh,
 );
 
-subtest 'find or create' => sub {
-    $teng->txn_begin;
+subtest 'teng find_or_create' => sub {
+    for my $i (1..2) {
+        $teng->txn_begin;
 
-    my $body;
+        my $fuga = $teng->find_or_create('fuga', {
+            path => '/teng_find_or_create',
+        });
 
-    my $fuga = $teng->find_or_create('fuga', {
-        path => '/find_or_create',
-    });
+        $fuga->update({ pageview => \'pageview + 1' });
+        $fuga = $fuga->refetch;
 
-    $fuga->update({ pageview => \'pageview + 1' });
-    $fuga = $fuga->refetch;
+        $teng->txn_commit;
 
-    $body = join ':', ($fuga->path, $fuga->pageview);
-    is $body, '/find_or_create:1';
-
-
-    $fuga->update({ pageview => \'pageview + 1' });
-    $fuga = $fuga->refetch;
-
-    $body = join ':', ($fuga->path, $fuga->pageview);
-    is $body, '/find_or_create:2';
-
-    $teng->txn_commit;
+        my $body = join ':', ($fuga->path, $fuga->pageview);
+        is $body, "/teng_find_or_create:$i";
+    }
 };
 
 done_testing;
